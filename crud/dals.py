@@ -39,6 +39,14 @@ class ControllerDAL:
         controller_row = res.fetchone()
         if controller_row is not None:
             return controller_row[0]
+        return None
+
+    async def get_controller_by_email(self, email: str) -> Union[Controller, None]:
+        query = select(Controller).where(Controller.email == email)
+        res = await self.db_session.execute(query)
+        controller_row = res.fetchone()
+        if controller_row is not None:
+            return controller_row[0]
 
     async def get_sensors(self, id: int) -> Union[List[Sensor], None]:
         query = select(Sensor).where(Sensor.id == id)

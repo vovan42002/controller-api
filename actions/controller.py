@@ -25,6 +25,17 @@ async def _get_controller_by_id(
         return controller
 
 
+async def _get_controller_by_email(
+    email: str, session: AsyncSession
+) -> Union[ControllerIdRespose, None]:
+    async with session.begin():
+        controller_dal = ControllerDAL(session)
+        controller = await controller_dal.get_controller_by_email(email=email)
+        if controller is not None:
+            return ControllerIdRespose(id=controller.id)
+        return None
+
+
 async def _get_sensors(id: int, session: AsyncSession) -> Union[List[Sensor], None]:
     async with session.begin():
         controller_dal = ControllerDAL(session)

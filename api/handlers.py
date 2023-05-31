@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from actions.controller import (
     _create_new_controller,
+    _get_controller_by_email,
     _get_controller_by_id,
     _delete_controller,
     _get_sensors,
@@ -49,6 +50,20 @@ async def get_controller_by_id(
             HTTPException(status_code=404, detail=f"Controller with id {id} not found")
         )
     return controller
+
+
+@controller_router.get("/email", response_model=ControllerIdRespose)
+async def get_controller_by_email(
+    email: str, session: AsyncSession = Depends(get_db)
+) -> ControllerIdRespose:
+    controller_id = await _get_controller_by_email(email=email, session=session)
+    if controller_id is None:
+        raise (
+            HTTPException(
+                status_code=404, detail=f"Controller with email {email} not found"
+            )
+        )
+    return controller_id
 
 
 @controller_router.get("/sensors")
