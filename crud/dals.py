@@ -49,7 +49,7 @@ class ControllerDAL:
             return controller_row[0]
 
     async def get_sensors(self, id: int) -> Union[List[Sensor], None]:
-        query = select(Sensor).where(Sensor.id == id)
+        query = select(Sensor).where(Controller.id == id)
         res = await self.db_session.execute(query)
         sensors = res.fetchall()
         if sensors is not None:
